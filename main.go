@@ -6,6 +6,8 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
+	"crypto/tls"
 )
 
 func readFile(path string) ([]string, error) {
@@ -25,7 +27,16 @@ func readFile(path string) ([]string, error) {
 
 func scanEndpoint(url string, path string) uint8 {
 
-	resp, err := http.Get(fmt.Sprintf("https://%s%s", url, path))
+	var fullUrl string
+
+	if strings.Contains(url, "http") {
+		fullUrl = fmt.Sprintf("%s%s", url, path)
+	} else {
+		fullUrl = fmt.Sprintf("https://%s%s", url, path)
+	}
+
+	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
+	resp, err := http.Get(fullUrl)
 
 	if err != nil {
 		log.Fatalln(err)
