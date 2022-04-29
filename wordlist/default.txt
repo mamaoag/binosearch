@@ -1,4 +1,3 @@
-/
 /api/ads
 /api/announcements
 /api/api
