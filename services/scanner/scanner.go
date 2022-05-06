@@ -7,8 +7,9 @@ import (
 	url "github.com/mamaoag/binosearch/services/url"
 )
 
-func ScanEndpoint(resource url.Url) {
+func ScanEndpoint(resource url.Url) url.Url {
 	var message string
+	var found url.Url = url.Url{}
 
 	res, err := proxy.Request(resource.Full)
 
@@ -22,6 +23,7 @@ func ScanEndpoint(resource url.Url) {
 		message = "Not found. ❌"
 	} else {
 		message = "Found. ✅"
+		found = resource
 	}
 
 	response := proxy.LogHttpResponse{
@@ -31,4 +33,6 @@ func ScanEndpoint(resource url.Url) {
 	}
 
 	proxy.LogResponse(response)
+
+	return found
 }
